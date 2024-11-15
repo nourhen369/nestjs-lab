@@ -14,7 +14,7 @@ export class CvService {
   constructor(
     @InjectRepository(Cv)
     private readonly cvRepository: Repository<Cv>,
-    private readonly skillService: SkillService
+    private readonly skillService: SkillService,
   ) {}
 
   async createFakeCv(user: User): Promise<Cv> {
@@ -24,17 +24,12 @@ export class CvService {
     cv1.age = randNumber({ min: 18, max: 60 });
     cv1.cin = randNumber({ min: 9000000, max: 13000000 });
     cv1.job = randJobTitle();
-    cv1.path = '/cv/path/to/file.pdf'; 
+    cv1.path = '/cv/path/to/file.pdf';
+    cv1.skills = [];
     const skill1 = await this.skillService.createFakeSkill();
-    const skill2 = await this.skillService.createFakeSkill();
-    cv1.skills = [skill1, skill2];
+    cv1.skills.push(skill1);
     cv1.user = user;
-    console.log("**********************")
-    console.log(cv1)
-    console.log("**********************")
-    
-    return cv1
-    // this.cvRepository.save(cv1);
+    return cv1;
   }
 
   create(createCvDto: CreateCvDto) {

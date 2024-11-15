@@ -13,28 +13,29 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly cvService: CvService, 
+    private readonly cvService: CvService
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
-    const newUser = new User();
-    newUser.username = createUserDto.username;
-    newUser.email = createUserDto.email;
-    newUser.password = createUserDto.password;
-    return this.userRepository.save(newUser);
+  async createFakeUser(): Promise<User> {
+    return await this.userRepository.manager.transaction(async (manager) => {
+      const newUser = new User();
+      newUser.username = randFullName();
+      newUser.email = randEmail();
+      newUser.password = randUuid();
+      const savedUser = await manager.save(newUser);
+      const cv = await this.cvService.createFakeCv(savedUser);
+      await manager.save(cv);
+      return savedUser;
+    });
   }
 
-  async createFakeUser(): Promise<User> {
-    const newUser = new User();
-    newUser.username = randFullName();
-    newUser.email = randEmail();
-    newUser.password = randUuid();
-    console.log(newUser.username)
-    console.log(newUser.email)
-    console.log(newUser.password)
-    const cv = await this.cvService.createFakeCv(newUser);
-    return this.userRepository.save(newUser);
-  }
+  create(createUserDto: CreateUserDto): Promise<User> {
+      const newUser = new User();
+      newUser.username = createUserDto.username;
+      newUser.email = createUserDto.email;
+      newUser.password = createUserDto.password;
+      return this.userRepository.save(newUser);
+    }
 
   findAll() {
     return `This action returns all user`;

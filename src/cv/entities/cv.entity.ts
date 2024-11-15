@@ -32,18 +32,19 @@ export class Cv /*extends TimestampEntity*/{
    )
    user :User ;
    
-  @ManyToMany(() => Skill, (skill) => skill.cvs, { cascade: ['insert', 'update'] })
-  @JoinTable({
-    name :"cv-skills",
-    joinColumn :{
-        name:"cv",
-        referencedColumnName:"id"
-    },
-    inverseJoinColumn:{
-        name:"skill",
-        referencedColumnName:"id"
-    }
-  })
-  skills : Skill[];
+   @ManyToMany(() => Skill, (skill) => skill.cvs, { cascade: ['insert'] })
+   @JoinTable({
+     name: "cv-skills",
+     joinColumn: {
+       name: "cv",
+       referencedColumnName: "id",
+     },
+     inverseJoinColumn: {
+       name: "skill",
+       referencedColumnName: "id",
+     },
+   })
+   skills: Skill[];
+   
 }
 

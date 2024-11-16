@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Skill } from './entities/skill.entity';
 import { randSkill } from '@ngneat/falso';
-import { Cv } from 'src/cv/entities/cv.entity';
 
 @Injectable()
 export class SkillService {

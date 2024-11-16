@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CvService } from 'src/cv/cv.service';
-import { SkillService } from 'src/skill/skill.service';
 
 @Injectable()
 export class UserService {
@@ -38,7 +37,7 @@ export class UserService {
     }
 
   findAll() {
-    return `This action returns all user`;
+    return this.userRepository.find();
   }
 
   findOne(id: number) {

@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateCvDto } from './dto/create-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
 import { Cv } from './entities/cv.entity';
-import { randJobTitle, randNumber } from '@ngneat/falso';
+import { randEmail, randFullName, randJobTitle, randNumber, randUuid } from '@ngneat/falso';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { SkillService } from 'src/skill/skill.service';
-import { log } from 'console';
+import { SkillService } from '../skill/skill.service';
 
 @Injectable()
 export class CvService {
@@ -29,26 +28,69 @@ export class CvService {
     const skill1 = await this.skillService.createFakeSkill();
     cv1.skills.push(skill1);
     cv1.user = user;
-    return cv1;
+    return cv1; // the cv is saved in the UserService
   }
 
-  create(createCvDto: CreateCvDto) {
-    return 'This action adds a new cv';
+  async seedCvs(): Promise<Cv> {
+    const cv2 = new Cv();
+    const newUser = new User();
+    newUser.username = randFullName();
+    newUser.email = randEmail();
+    newUser.password = randUuid();
+    cv2.name = newUser.username.split(' ')[0];
+    cv2.firstname = newUser.username.split(' ')[1];
+    cv2.age = randNumber({ min: 18, max: 60 });
+    cv2.cin = randNumber({ min: 9000000, max: 13000000 });
+    cv2.job = randJobTitle();
+    cv2.path = '/cv/path/to/file.pdf';
+    cv2.skills = [];
+    const skill1 = await this.skillService.createFakeSkill();
+    cv2.skills.push(skill1);
+    cv2.user = newUser;
+    return this.cvRepository.save(cv2)
   }
 
-  findAll() {
-    return `This action returns all cv`;
+  async create(createCvDto: CreateCvDto) {
+    const cv = this.cvRepository.create(createCvDto); 
+    return await this.cvRepository.save(cv);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cv`;
+  async findAll() {
+    return await this.cvRepository.find(); 
+  }
+  
+
+  async findOne(id: Number) {
+    const cv = await this.cvRepository.findOne({
+      where: { id },  
+    });
+    if (!cv) {
+      throw new Error(`CV avec l'ID ${id} non trouvé`); 
+    }
+    return cv;
   }
 
-  update(id: number, updateCvDto: UpdateCvDto) {
-    return `This action updates a #${id} cv`;
+  async update(id: number, updateCvDto: UpdateCvDto) {
+    const cv = await this.cvRepository.findOne({
+      where: { id },  
+    });
+    if (!cv) {
+      throw new Error(`CV avec l'ID ${id} non trouvé`); 
+    }
+    Object.assign(cv, updateCvDto);
+    return await this.cvRepository.save(cv); 
   }
+  
 
-  remove(id: number) {
-    return `This action removes a #${id} cv`;
+  async remove(id: number) {
+    const cv = await this.cvRepository.findOne({
+      where: { id },  
+    });
+    if (!cv) {
+      throw new Error(`CV avec l'ID ${id} non trouvé`);
+    }
+    await this.cvRepository.remove(cv); 
+    return { message: `CV avec l'ID ${id} supprimé` }; 
   }
+  
 }

@@ -5,7 +5,7 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColum
 @Entity('cv')
 export class Cv /*extends TimestampEntity*/{
    @PrimaryGeneratedColumn("uuid")
-  id: number ;
+  id: Number ;
   
   @Column()
   name: string ;

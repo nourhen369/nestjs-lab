@@ -5,7 +5,7 @@ import { randEmail, randFullName, randUuid } from '@ngneat/falso';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { CvService } from 'src/cv/cv.service';
+import { CvService } from '../cv/cv.service';
 
 @Injectable()
 export class UserService {

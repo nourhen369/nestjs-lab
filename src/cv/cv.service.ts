@@ -59,7 +59,6 @@ export class CvService {
     return await this.cvRepository.find(); 
   }
   
-
   async findOne(id: Number) {
     const cv = await this.cvRepository.findOne({
       where: { id },  
@@ -80,7 +79,6 @@ export class CvService {
     Object.assign(cv, updateCvDto);
     return await this.cvRepository.save(cv); 
   }
-  
 
   async remove(id: number) {
     const cv = await this.cvRepository.findOne({

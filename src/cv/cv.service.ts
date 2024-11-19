@@ -33,12 +33,9 @@ export class CvService {
 
   async seedCvs(): Promise<Cv> {
     const cv2 = new Cv();
-    const newUser = new User();
-    newUser.username = randFullName();
-    newUser.email = randEmail();
-    newUser.password = randUuid();
-    cv2.name = newUser.username.split(' ')[0];
-    cv2.firstname = newUser.username.split(' ')[1];
+    const username = randFullName();
+    cv2.name = username.split(' ')[0];
+    cv2.firstname = username.split(' ')[1];
     cv2.age = randNumber({ min: 18, max: 60 });
     cv2.cin = randNumber({ min: 9000000, max: 13000000 });
     cv2.job = randJobTitle();
@@ -46,7 +43,7 @@ export class CvService {
     cv2.skills = [];
     const skill1 = await this.skillService.createFakeSkill();
     cv2.skills.push(skill1);
-    cv2.user = newUser;
+    console.log(cv2)
     return this.cvRepository.save(cv2)
   }
 

@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Skill } from './skill/entities/skill.entity';
 import { Cv } from './cv/entities/cv.entity';
 import { User } from './user/entities/user.entity';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { User } from './user/entities/user.entity';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Cv, Skill, User]),
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,12 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module'; 
-import { CvService } from '../cv/cv.service'; 
+import { SeedService } from '../seed/seed.service';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
-  const cvService = app.get(CvService);
+  const seedService = app.get(SeedService);
   console.log('Seeding CVs...');
-  await cvService.seedCvs();
+  await seedService.seed();
   console.log('Seeding finished.');
   await app.close();
 }

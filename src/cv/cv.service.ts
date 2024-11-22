@@ -31,22 +31,6 @@ export class CvService {
     return cv1; // the cv is saved in the UserService
   }
 
-  async seedCvs(): Promise<Cv> {
-    const cv2 = new Cv();
-    const username = randFullName();
-    cv2.name = username.split(' ')[0];
-    cv2.firstname = username.split(' ')[1];
-    cv2.age = randNumber({ min: 18, max: 60 });
-    cv2.cin = randNumber({ min: 9000000, max: 13000000 });
-    cv2.job = randJobTitle();
-    cv2.path = '/cv/path/to/file.pdf';
-    cv2.skills = [];
-    const skill1 = await this.skillService.createFakeSkill();
-    cv2.skills.push(skill1);
-    console.log(cv2)
-    return this.cvRepository.save(cv2)
-  }
-
   async create(createCvDto: CreateCvDto) {
     const cv = this.cvRepository.create(createCvDto); 
     return await this.cvRepository.save(cv);
